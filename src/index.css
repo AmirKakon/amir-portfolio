@@ -11,3 +11,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Mobile styles */
+@media only screen and (max-width: 600px) {
+  h2 {
+    font-size: 12px; /* Adjust the size according to your preference */
+  }
+  
+  h4 {
+    font-size: 5px;
+  }
+  
+  body {
+    font-size: 14px;
+  }
+
+  code {
+    font-size: 14px;
+  }
+}

@@ -1,24 +1,38 @@
 import logo from './logo.svg';
 import './App.css';
+import { lightThemeOptions, darkThemeOptions } from './theme';
+import { ThemeProvider, useMediaQuery, createTheme } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HomePage, AboutPage } from './pages';
+import { Header } from './layout';
 
-function App() {
+const App = () => {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const [theme, setTheme] = useState(
+    createTheme(prefersDarkMode ? darkThemeOptions : lightThemeOptions)
+  );
+
+  useEffect(() => {
+    setTheme(createTheme(prefersDarkMode ? darkThemeOptions : lightThemeOptions));
+  }, [prefersDarkMode]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React to try to make a change - trigger
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Header />
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+          </header>
+          <Routes>
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="*" element={<Navigate to="/home" replace />} />
+          </Routes>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 
