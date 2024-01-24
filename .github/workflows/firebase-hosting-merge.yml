@@ -16,4 +16,5 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_AMIR_PORTFOLIO_9FE8A }}'
+          channelId: live
           projectId: amir-portfolio-9fe8a
