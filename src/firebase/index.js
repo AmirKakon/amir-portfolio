@@ -5,7 +5,7 @@ import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBdiAafwF1tbx7QTlTYhJaMYpsBInHqD28",
-  authDomain: "amir-portfolio-9fe8a.firebaseapp.com",
+  authDomain: "amir-portfolio-9fe8a.web.app",
   projectId: "amir-portfolio-9fe8a",
   storageBucket: "amir-portfolio-9fe8a.appspot.com",
   messagingSenderId: "863602545457",
