@@ -1,8 +1,17 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render, screen } from "@testing-library/react";
+import { BrowserRouter as Router } from "react-router-dom";
+import App from "./App";
 
-test('renders learn react link', () => {
+test("renders App component without crashing", () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+});
+
+test("renders HomePage and AboutPage routes", () => {
+  render(<App />);
+
+  const homeRoute = screen.getByRole("link", { name: /home/i });
+  expect(homeRoute).toBeInTheDocument();
+
+  const aboutRoute = screen.getByRole("link", { name: /about/i });
+  expect(aboutRoute).toBeInTheDocument();
 });

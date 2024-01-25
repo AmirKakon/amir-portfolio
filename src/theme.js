@@ -24,15 +24,15 @@ export const lightThemeOptions = {
 
 export const darkThemeOptions = {
   palette: {
-    mode: "dark",
+    mode: 'dark',
     primary: {
-      main: "#e6deca",
+      main: '#63876e',
     },
     secondary: {
-      main: "#2c3c30",
+      main: '#9cbda6',
     },
-  },
-  typography: {
-    fontFamily: "Droid Serif",
+    typography: {
+      fontFamily: 'Droid Serif',
+    },
   },
 };
