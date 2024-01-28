@@ -5,7 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-const Header = () => {
+const Header = ({isSmallScreen}) => {
   return (
     <AppBar color="primary" position="static">
       <Toolbar>
