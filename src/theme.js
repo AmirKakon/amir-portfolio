@@ -18,7 +18,7 @@ export const lightThemeOptions = {
     },
   },
   typography: {
-    fontFamily: "Droid Serif",
+    fontFamily: "Calibri",
   },
 };
 
@@ -32,7 +32,7 @@ export const darkThemeOptions = {
       main: '#9cbda6',
     },
     typography: {
-      fontFamily: 'Droid Serif',
+      fontFamily: 'Calibri',
     },
   },
 };

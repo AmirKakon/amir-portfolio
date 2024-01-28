@@ -1,8 +1,10 @@
+import { Box } from "@mui/material";
+
 const HomePage = () => {
   return (
-    <div>
+    <Box flexGrow={1}>
       <h1>Home Page</h1>
-    </div>
+    </Box>
   );
 };
 

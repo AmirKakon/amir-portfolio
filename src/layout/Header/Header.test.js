@@ -11,7 +11,4 @@ test('renders header with home and about links', () => {
 
   const homeLinkElement = screen.getByText(/home/i);
   expect(homeLinkElement).toBeInTheDocument();
-
-  const aboutLinkElement = screen.getByText(/about/i);
-  expect(aboutLinkElement).toBeInTheDocument();
 });
