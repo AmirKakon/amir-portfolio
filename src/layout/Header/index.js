@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
+import InfoIcon from '@mui/icons-material/Info';
 import logo from "../../assets/amir-icon.png";
 import tongueLogo from "../../assets/amir-tongue-icon.png";
 
@@ -75,7 +76,8 @@ const Header = ({ isSmallScreen }) => {
     setDrawerOpen(false);
   };
 
-  const headerIcons = [{ title: "Home", link: "/home", icon: <HomeIcon /> }];
+  const headerIcons = [{ title: "Home", link: "/home", icon: <HomeIcon /> },
+  { title: "About", link: "/about", icon: <InfoIcon /> }];
 
   return (
     <Box sx={{ flexGrow: 1, marginBottom: 7 }}>

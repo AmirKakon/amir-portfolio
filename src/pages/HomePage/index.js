@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 
 const HomePage = () => {
   const [loading, setLoading] = useState(true);
-  window.scrollTo({ top: 0, behavior: "auto" });
+  // window.scrollTo({ top: 0, behavior: "auto" });
 
   useEffect(() => {
     setLoading(false);
