@@ -13,8 +13,8 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
-import logo from "../../media/amir-icon.png";
-import tongueLogo from "../../media/amir-tongue-icon.png";
+import logo from "../../assets/amir-icon.png";
+import tongueLogo from "../../assets/amir-tongue-icon.png";
 
 const HeaderLogo = ({ isSmallScreen }) => {
   return (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import logo from "../../media/amir-icon.png";
-import logo_tongue from "../../media/amir-tongue-icon.png";
+import logo from "../../assets/amir-icon.png";
+import logo_tongue from "../../assets/amir-tongue-icon.png";
 import { Box } from "@mui/material";
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
