@@ -18,6 +18,8 @@ import logo from "../../assets/amir-icon.png";
 import tongueLogo from "../../assets/amir-tongue-icon.png";
 
 const HeaderLogo = ({ isSmallScreen }) => {
+  const [isHovered, setHovered] = useState(false);
+
   return (
     <>
       {!isSmallScreen && (
@@ -29,14 +31,16 @@ const HeaderLogo = ({ isSmallScreen }) => {
             color: "inherit",
             marginLeft: -10,
           }}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
         >
-          <img src={logo} alt="Amir's Portfolio" height={55}/>
+          <img src={isHovered ? tongueLogo : logo} alt="Amir's Portfolio" height={55}/>
         </Link>
       )}
 
       <Typography
         variant="h5"
-        sx={{ flexGrow: 1, textAlign: isSmallScreen ? "center" : "left", ml:1 }}
+        sx={{ flexGrow: 1, textAlign: isSmallScreen ? "center" : "left", ml:isSmallScreen ? -5 : 1}}
       >
         Amir's Portfolio
       </Typography>

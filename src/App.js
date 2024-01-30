@@ -40,7 +40,7 @@ const App = () => {
         <Box display="flex" flexDirection="column" minHeight="100vh">
           <Routes>
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/home" element={<HomePage />} />
+            <Route path="/home" element={<HomePage isSmallScreen={isSmallScreen}/>} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
           <Footer isSmallScreen={isSmallScreen} />

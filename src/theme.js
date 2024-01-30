@@ -20,19 +20,20 @@ export const lightThemeOptions = {
   typography: {
     fontFamily: "Calibri",
   },
+  divider: "#ec2424",
 };
 
 export const darkThemeOptions = {
   palette: {
-    mode: 'dark',
+    mode: "dark",
     primary: {
-      main: '#63876e',
+      main: "#63876e",
     },
     secondary: {
-      main: '#9cbda6',
+      main: "#9cbda6",
     },
     typography: {
-      fontFamily: 'Calibri',
+      fontFamily: "Calibri",
     },
   },
 };
