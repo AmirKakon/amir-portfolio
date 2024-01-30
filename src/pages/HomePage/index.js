@@ -20,7 +20,7 @@ const HomePage = ({ isSmallScreen }) => {
   return loading ? (
     <Loading />
   ) : (
-    <Box flex={1} spacing={4}>
+    <Box flex={1} spacing={1}>
       <Heading isSmallScreen={isSmallScreen} />
       <Typography component="h1">Test this out</Typography>
     </Box>
