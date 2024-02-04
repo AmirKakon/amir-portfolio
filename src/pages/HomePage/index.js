@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { Box } from "@mui/material";
 import Heading from "../../components/Heading";
+import AboutMe from "../../components/AboutMe";
 import Loading from "../../components/Loading";
-import { Box, Typography } from "@mui/material";
+
 
 const HomePage = ({ isSmallScreen }) => {
   const [loading, setLoading] = useState(true);
@@ -17,12 +19,17 @@ const HomePage = ({ isSmallScreen }) => {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
+  const jumpToAboutMe = () => {
+    const aboutMe = document.getElementById("about-me");
+    aboutMe.scrollIntoView({ behavior: "smooth" });
+  };
+
   return loading ? (
     <Loading />
   ) : (
-    <Box flex={1} spacing={1}>
-      <Heading isSmallScreen={isSmallScreen} />
-      <Typography component="h1">Test this out</Typography>
+    <Box flex={1} spacing={1} sx={{backgroundColor: "#e2e2e2"}}>
+      <Heading isSmallScreen={isSmallScreen} handleArrowClick={jumpToAboutMe}/>
+      <AboutMe isSmallScreen={isSmallScreen} />
     </Box>
   );
 };

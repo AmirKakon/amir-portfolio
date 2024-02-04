@@ -16,7 +16,7 @@ const jumpAnimation = keyframes`
   100% { transform: translateY(0); }
 `;
 
-const Heading = ({ isSmallScreen }) => {
+const Heading = ({ isSmallScreen, handleArrowClick}) => {
   const isMediumScreen = useMediaQuery("(max-width: 900px)");
 
   return (
@@ -38,6 +38,7 @@ const Heading = ({ isSmallScreen }) => {
               width: "30vw",
               left: "2vw",
               top: "2vh",
+              zIndex: "2",
             }}
           />
           <video
@@ -47,7 +48,7 @@ const Heading = ({ isSmallScreen }) => {
             style={{
               position: "absolute",
               width: "100vw",
-              zIndex: "-1",
+              zIndex: "1",
             }}
             src={video}
           />
@@ -73,6 +74,7 @@ const Heading = ({ isSmallScreen }) => {
           <IconButton
             color="secondary"
             sx={{ animation: `${jumpAnimation} 1.5s ease-in-out infinite` }}
+            onClick={handleArrowClick}
           >
             <ArrowDownwardIcon />
           </IconButton>
