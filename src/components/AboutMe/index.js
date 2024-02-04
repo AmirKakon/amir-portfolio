@@ -7,13 +7,14 @@ const AboutMe = ({ isSmallScreen }) => {
     <div id="about-me">
       <Paper sx={{ margin: 1, padding:1 }}>
         <Grid container direction="column" display="flex" alignItems="center">
-          <Grid item>
-            <video autoPlay loop muted src={info} style={{ width: 60 }} />
+          <Grid container item direction="row" display="flex" alignItems="center" justifyContent="center" spacing={1}>
+            <Grid item><video autoPlay loop muted src={info} style={{ width: 40}} />
           </Grid>
           <Grid item>
-            <Typography variant="h4" textAlign="center" gutterBottom>
+            <Typography variant="h4" textAlign="center">
               About Me
             </Typography>
+          </Grid>
           </Grid>
           <Grid item>
             <Typography>
