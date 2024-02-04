@@ -13,7 +13,8 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
-import InfoIcon from '@mui/icons-material/Info';
+import ConstructionIcon from '@mui/icons-material/Construction';
+import InfoIcon from "@mui/icons-material/Info";
 import logo from "../../assets/amir-icon.png";
 import tongueLogo from "../../assets/amir-tongue-icon.png";
 
@@ -34,13 +35,21 @@ const HeaderLogo = ({ isSmallScreen }) => {
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
-          <img src={isHovered ? tongueLogo : logo} alt="Amir's Portfolio" height={55}/>
+          <img
+            src={isHovered ? tongueLogo : logo}
+            alt="Amir's Portfolio"
+            height={55}
+          />
         </Link>
       )}
 
       <Typography
         variant="h5"
-        sx={{ flexGrow: 1, textAlign: isSmallScreen ? "center" : "left", ml:isSmallScreen ? -5 : 1}}
+        sx={{
+          flexGrow: 1,
+          textAlign: isSmallScreen ? "center" : "left",
+          ml: isSmallScreen ? -5 : 1,
+        }}
       >
         Amir's Portfolio
       </Typography>
@@ -80,8 +89,11 @@ const Header = ({ isSmallScreen }) => {
     setDrawerOpen(false);
   };
 
-  const headerIcons = [{ title: "Home", link: "/", icon: <HomeIcon /> },
-  { title: "About", link: "/about", icon: <InfoIcon /> }];
+  const headerIcons = [
+    { title: "Home", link: "/", icon: <HomeIcon /> },
+    { title: "Projects", link: "/projects", icon: <ConstructionIcon /> },
+    { title: "About", link: "/about", icon: <InfoIcon /> },
+  ];
 
   return (
     <Box sx={{ flexGrow: 1, marginBottom: 7 }}>
