@@ -10,7 +10,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { Box } from "@mui/material";
-import { HomePage, AboutPage } from "./pages";
+import { HomePage, ProjectsPage, AboutPage } from "./pages";
 import { Header, Footer } from "./layout";
 
 const App = () => {
@@ -39,9 +39,24 @@ const App = () => {
         <Header isSmallScreen={isSmallScreen} />
         <Box display="flex" flexDirection="column" minHeight="100vh">
           <Routes>
-            <Route path="/about" element={<AboutPage isSmallScreen={isSmallScreen} />} />
-            <Route path="/home" element={<HomePage isSmallScreen={isSmallScreen}/>} />
-            <Route path="*" element={<Navigate to="/home" replace />} />
+            
+            <Route
+              path="/about"
+              element={<AboutPage isSmallScreen={isSmallScreen} />}
+            />
+            <Route
+              path="/projects/:project"
+              element={<div>Test this page</div>}
+            />
+            <Route
+              path="/projects/"
+              element={<ProjectsPage isSmallScreen={isSmallScreen} />}
+            />
+            <Route
+              path="/"
+              element={<HomePage isSmallScreen={isSmallScreen} />}
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <Footer isSmallScreen={isSmallScreen} />
         </Box>

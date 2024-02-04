@@ -24,7 +24,7 @@ const HeaderLogo = ({ isSmallScreen }) => {
     <>
       {!isSmallScreen && (
         <Link
-          to="/home"
+          to="/"
           style={{
             textDecoration: "none",
             display: "flex",
@@ -80,7 +80,7 @@ const Header = ({ isSmallScreen }) => {
     setDrawerOpen(false);
   };
 
-  const headerIcons = [{ title: "Home", link: "/home", icon: <HomeIcon /> },
+  const headerIcons = [{ title: "Home", link: "/", icon: <HomeIcon /> },
   { title: "About", link: "/about", icon: <InfoIcon /> }];
 
   return (
