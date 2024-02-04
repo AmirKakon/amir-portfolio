@@ -10,7 +10,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { Box } from "@mui/material";
-import { HomePage, ProjectsPage, AboutPage } from "./pages";
+import { HomePage, ProjectsPage, ProjectOverviewPage, AboutPage } from "./pages";
 import { Header, Footer } from "./layout";
 
 const App = () => {
@@ -45,8 +45,8 @@ const App = () => {
               element={<AboutPage isSmallScreen={isSmallScreen} />}
             />
             <Route
-              path="/projects/:project"
-              element={<div>Test this page</div>}
+              path="/projects/:projectId"
+              element={<ProjectOverviewPage isSmallScreen={isSmallScreen} />}
             />
             <Route
               path="/projects/"
