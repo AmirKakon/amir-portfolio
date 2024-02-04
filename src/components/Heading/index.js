@@ -64,12 +64,12 @@ const Heading = ({ isSmallScreen, handleArrowClick}) => {
           flexDirection="column"
           sx={{ backgroundColor: "#010101", height: "90vh" }}
         >
-          <video autoPlay loop muted src={squareVideo} />
+          <video autoPlay loop muted src={squareVideo} style={{height: "50vh"}} />
           <video
             autoPlay
             muted
             src={squareName}
-            style={{ width: "80vw", paddingLeft: 5 }}
+            style={{ height:"37vh", paddingLeft: 5 }}
           />
           <IconButton
             color="secondary"
