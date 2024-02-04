@@ -3,6 +3,7 @@ import Loading from "../../components/Loading";
 import { Box } from "@mui/material";
 import { dummyData } from "../../components/Timeline/dummyData";
 const Timeline = lazy(() => import("../../components/Timeline"));
+const AboutMe = lazy(() => import("../../components/AboutMe"));
 
 const AboutPage = ({ isSmallScreen }) => {
   const [timelineData, setTimelineData] = useState([]);
@@ -25,7 +26,9 @@ const AboutPage = ({ isSmallScreen }) => {
   ) : (
     <Box flex={1} padding={1}>
       <Suspense fallback={<Loading />}>
+        <AboutMe isSmallScreen={isSmallScreen} />
         <Timeline isSmallScreen={isSmallScreen} data={timelineData} />
+        
       </Suspense>
     </Box>
   );
