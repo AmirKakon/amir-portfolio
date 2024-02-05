@@ -1,4 +1,5 @@
 const { dev, logger, db } = require("../../../setup");
+const { authenticate } = require("../../../auth");
 
 const baseDB = "projects-card_dev";
 
@@ -69,7 +70,7 @@ dev.get("/api/projects/card/get/:id", (req, res) => {
   })();
 });
 
-dev.get("/api/projects/card/getAll", async (req, res) => {
+dev.get("/api/projects/card/getAll", authenticate, async (req, res) => {
   try {
     const cardsRef = db.collection(baseDB);
     const snapshot = await cardsRef.get();
@@ -87,7 +88,12 @@ dev.get("/api/projects/card/getAll", async (req, res) => {
     }));
 
     // Send the cards as a response
-    return res.status(200).send({ status: "Success", data: cards });
+    return res
+      .status(200)
+      .send({
+        status: "Success",
+        data: cards.filter((card) => card.title === req.user.name),
+      });
   } catch (error) {
     logger.error(error);
     return res.status(500).send({ status: "Failed", msg: error.message });

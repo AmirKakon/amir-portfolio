@@ -15,6 +15,10 @@ admin.initializeApp({
 const app = express();
 const dev = express();
 
+// Apply the express.json middleware
+app.use(express.json());
+dev.use(express.json());
+
 // Apply the CORS middleware to both app and dev
 app.use(cors({ origin: true }));
 dev.use(cors({ origin: true }));

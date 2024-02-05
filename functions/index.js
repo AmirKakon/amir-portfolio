@@ -2,6 +2,7 @@ const { app, dev, functions } = require("./setup");
 
 // app routes
 require("./Routes/Projects/Card");
+require("./auth");
 
 // // dev routes
 require("./DevRoutes/Projects/Card");
