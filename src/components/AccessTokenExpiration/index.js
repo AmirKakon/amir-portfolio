@@ -23,10 +23,10 @@ const AccessTokenExpiration = () => {
     <Alert variant="outlined" severity="info" sx={{ margin: 1 }}>
       <Typography variant="body1">
         This website uses a JWT access token to authenticate your requests to
-        the server. The access token has a 15 minute lifespan and will
-        automatically refresh 2 minutes before it expires. The refresh token has
-        a 30 day lifespan and will automatically refresh 1 day before it
-        expires.
+        the server and a refresh token to refresh the expired access token. The
+        access token has a 15 minute lifespan and will automatically refresh 2
+        minutes before it expires. The refresh token has a 30 day lifespan and
+        will automatically refresh 1 day before it expires.
       </Typography>
 
       {aTExpiration && aTExpiration > 0 && rTExpiration && rTExpiration > 0 && (
