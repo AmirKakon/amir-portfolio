@@ -1,4 +1,4 @@
-const { app, logger, functions } = require("./setup");
+const { app, logger, functions } = require("../../setup");
 const jwt = require("jsonwebtoken");
 
 const jwtKey = functions.config().serviceaccount_privateid_jwt.key;

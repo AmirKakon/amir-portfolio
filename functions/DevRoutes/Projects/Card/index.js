@@ -1,5 +1,5 @@
 const { dev, logger, db } = require("../../../setup");
-const { authenticate } = require("../../../auth");
+const { authenticate } = require("../../Auth");
 
 const baseDB = "projects-card_dev";
 
@@ -92,7 +92,7 @@ dev.get("/api/projects/card/getAll", authenticate, async (req, res) => {
       .status(200)
       .send({
         status: "Success",
-        data: cards.filter((card) => card.title === req.user.name),
+        data: cards,
       });
   } catch (error) {
     logger.error(error);

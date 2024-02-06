@@ -2,10 +2,11 @@ const { app, dev, functions } = require("./setup");
 
 // app routes
 require("./Routes/Projects/Card");
-require("./auth");
+require("./Routes/Auth");
 
 // // dev routes
 require("./DevRoutes/Projects/Card");
+require("./DevRoutes/Auth");
 
 // Export the main app
 exports.app = functions.https.onRequest(app);
