@@ -21,7 +21,7 @@ const ProjectItem = ({ project }) => {
       sx={{
         padding: 1,
         backgroundColor: "#e6deca",
-        height: "95%",
+        height: "96%",
         display: "flex",
         flexDirection: "column",
       }}
@@ -44,7 +44,7 @@ const ProjectItem = ({ project }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant="outlined" onClick={handleLearnMore}>
+        <Button variant="outlined" onClick={handleLearnMore} fullWidth>
           Learn More
         </Button>
       </CardActions>
