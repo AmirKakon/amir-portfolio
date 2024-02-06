@@ -37,7 +37,7 @@ const ProjectItem = ({ project }) => {
           {project.title}
         </Typography>
         <Typography variant="subtitle1" color="GrayText">
-          {project.languages}
+          {project.technologies}
         </Typography>
         <Typography variant="body1" sx={{ flex: 1, overflow: "auto" }}>
           {project.description}

@@ -8,13 +8,13 @@ const baseDB = "projects-card_dev";
 dev.post("/api/projects/card/create", authenticate, async (req, res) => {
   try {
     checkRequiredParams(
-      ["title", "languages", "description", "image", "alt", "url"],
+      ["title", "technologies", "description", "image", "alt", "url"],
       req.body,
     );
 
     await db.collection(baseDB).add({
       title: req.body.title,
-      languages: req.body.languages,
+      technologies: req.body.technologies,
       description: req.body.description,
       image: req.body.image,
       alt: req.body.alt,
@@ -78,17 +78,18 @@ dev.get("/api/projects/card/getAll", authenticate, async (req, res) => {
 });
 
 // update card
-dev.put("/api/projects/cards/update/:id", authenticate, async (req, res) => {
+dev.put("/api/projects/card/update/:id", authenticate, async (req, res) => {
   try {
+    checkRequiredParams(["id"], req.params);
     checkRequiredParams(
-      ["title", "languages", "description", "image", "alt", "url"],
+      ["title", "technologies", "description", "image", "alt", "url"],
       req.body,
     );
 
     const reqDoc = db.collection(baseDB).doc(req.params.id);
     await reqDoc.update({
       title: req.body.title,
-      languages: req.body.languages,
+      technologies: req.body.technologies,
       description: req.body.description,
       image: req.body.image,
       alt: req.body.alt,
@@ -103,7 +104,7 @@ dev.put("/api/projects/cards/update/:id", authenticate, async (req, res) => {
 });
 
 // delete card
-dev.delete("/api/projects/cards/delete/:id", authenticate, async (req, res) => {
+dev.delete("/api/projects/card/delete/:id", authenticate, async (req, res) => {
   try {
     checkRequiredParams(["id"], req.params);
 

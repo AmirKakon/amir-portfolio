@@ -10,14 +10,8 @@ const HomePage = ({ isSmallScreen }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      // const response = await fetch("https://api.spacexdata.com/v4/launches");
-      // const data = await response.json();
-      setLoading(false);
-    };
-
-    fetchData();
     window.scrollTo({ top: 0, behavior: "auto" });
+    setLoading(false);
   }, []);
 
   const jumpToProjects = () => {
