@@ -1,61 +1,119 @@
-const { dev, logger, functions } = require("../../setup");
+const { dev, logger, admin, functions, db } = require("../../setup");
 const jwt = require("jsonwebtoken");
+const dayjs = require("dayjs");
+const util = require("util");
+const jwtVerify = util.promisify(jwt.verify);
+const { checkRequiredParams } = require("../Utilities");
+
+const baseDB = "refresh-tokens_dev";
 
 const jwtKey = functions.config().serviceaccount_privateid_jwt.key;
+const jwtKeyExpire = functions.config().serviceaccount_privateid_jwt.expire;
 const jwtRefresh = functions.config().serviceaccount_clientid_jwt.refresh;
+const jwtRefreshExpire = functions.config().serviceaccount_clientid_jwt.expire;
 
-// FUTURE: via database
-let refreshTokens = [];
-
-const authenticate = (req, res, next) => {
+const authenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    if (!token) {
-      return res
-        .status(401)
-        .send({
-          status: "Failed",
-          message: "Access Denied: No Token Provided!",
-        });
+    if (!authHeader) {
+      throw new Error("Missing authorization header");
     }
 
-    jwt.verify(token, jwtKey, (err, user) => {
-      if (err) {
-        return res.status(403).send({ status: "Invalid Token", error: err });
-      }
-      req.user = user;
-      next();
-    });
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      throw new Error("Missing token in authorization header");
+    }
+
+    const user = await jwtVerify(token, jwtKey);
+    req.user = user;
+    next();
   } catch (error) {
     logger.error(error);
-    res.status(400).send({ status: "Failed", error: error });
+    res.status(400).send({ status: "Failed", error: error.message });
   }
 };
 
-const generateTokens = (user, refresh) => {
-  const accessToken = jwt.sign(user, jwtKey, { expiresIn: "15m" });
-  if (!refresh) return accessToken;
+const addRefreshToken = async (refreshToken, userId) => {
+  try {
+    if (!userId) {
+      throw new Error("Invalid user ID");
+    }
 
-  const refreshToken = jwt.sign(user, jwtRefresh);
+    if (!refreshToken) {
+      throw new Error("Invalid refresh token");
+    }
 
-  // FUTURE: add to database
-  refreshTokens.push(refreshToken);
+    await db
+      .collection(baseDB)
+      .doc(userId)
+      .set({
+        token: refreshToken,
+        timestamp: admin.firestore.Timestamp.fromDate(dayjs().toDate()),
+      });
 
-  return { accessToken, refreshToken };
+    return { status: "Success", msg: "Token Added" };
+  } catch (error) {
+    logger.error(error);
+    return { status: "Failed", msg: error.message };
+  }
 };
 
-dev.post("/api/auth/login", (req, res) => {
+const deleteRefreshToken = async (userId) => {
   try {
-    const username = req.body.username;
-    if (!username) {
-      return res
-        .status(400)
-        .send({ status: "Failed", message: "Invalid Username" });
+    if (!userId) {
+      throw new Error("Invalid user ID");
     }
-    const user = { name: username };
 
-    const { accessToken, refreshToken } = generateTokens(user, true);
+    const doc = db.collection(baseDB).doc(userId);
+    const docSnapshot = await doc.get();
+
+    if (!docSnapshot.exists) {
+      throw new Error("Refresh token does not exist");
+    }
+
+    await doc.delete();
+
+    return { status: "Success", msg: "Token Deleted" };
+  } catch (error) {
+    logger.error(error);
+    return { status: "Failed", msg: error.message };
+  }
+};
+
+const generateTokens = async (user, refresh) => {
+  try {
+    if (!user) {
+      throw new Error("Invalid user");
+    }
+
+    const accessToken = jwt.sign(user, jwtKey, { expiresIn: jwtKeyExpire });
+    if (!refresh) return accessToken;
+
+    const refreshToken = jwt.sign(user, jwtRefresh, {
+      expiresIn: jwtRefreshExpire,
+    });
+
+    const response = await addRefreshToken(refreshToken, user.id);
+    if (response.status === "Failed") {
+      throw new Error(response.msg);
+    }
+
+    return { accessToken, refreshToken };
+  } catch (error) {
+    logger.error(error);
+    return { accessToken: null, refreshToken: null, error: error.message };
+  }
+};
+
+dev.post("/api/auth/login", async (req, res) => {
+  try {
+    checkRequiredParams(["username", "id"], req.body);
+
+    const username = req.body.username;
+    const id = req.body.id;
+
+    const user = { name: username, id: id };
+    const { accessToken, refreshToken } = await generateTokens(user, true);
 
     res.status(200).send({
       status: "Success",
@@ -64,48 +122,58 @@ dev.post("/api/auth/login", (req, res) => {
     });
   } catch (error) {
     logger.error(error);
-    res.status(500).send({ status: "Failed", message: error });
+    res.status(400).send({ status: "Failed", message: error.message });
   }
 });
 
-dev.delete("/api/auth/logout", (req, res) => {
+dev.delete("/api/auth/logout", async (req, res) => {
   try {
-    // FUTURE: delete from database
-    refreshTokens = refreshTokens.filter((token) => token !== req.body.token);
+    checkRequiredParams(["id"], req.body);
+
+    const id = req.body.id;
+
+    const response = await deleteRefreshToken(id);
+    if (response.status === "Failed") {
+      throw new Error(response.msg);
+    }
 
     res.status(200).send({ status: "Success", message: "Logged Out" });
   } catch (error) {
     logger.error(error);
-    res.status(500).send({ status: "Failed", message: error });
+    res.status(500).send({ status: "Failed", message: error.message });
   }
 });
 
-dev.post("/api/auth/token", (req, res) => {
+dev.post("/api/auth/token", async (req, res) => {
   try {
+    checkRequiredParams(["token"], req.body);
+
     const refreshToken = req.body.token;
-    if (!refreshToken) {
-      return res.status(401).send({
-        status: "Failed",
-        message: "Access Denied: No Token Provided!",
-      });
+
+    const payload = jwt.decode(refreshToken);
+    const { id } = payload;
+
+    const tokenRef = db.collection(baseDB).doc(id);
+    const doc = await tokenRef.get(); // gets doc
+    const data = doc.data(); // the actual data of the doc
+
+    if (!data || data.token !== refreshToken) {
+      throw new Error(`No refresh token found with id: ${id}`);
     }
 
-    if (!refreshTokens.includes(refreshToken)) {
-      return res
-        .status(403)
-        .send({ status: "Failed", message: "Invalid Token" });
-    }
-
-    jwt.verify(refreshToken, jwtRefresh, (err, user) => {
+    jwt.verify(refreshToken, jwtRefresh, async (err, user) => {
       if (err) {
-        return res.status(403).send({ status: "Invalid Token", message: err });
+        throw err;
       }
-      const accessToken = generateTokens({ name: user.name }, false);
+      const accessToken = await generateTokens(
+        { name: user.name, id: user.id },
+        false,
+      );
       res.status(200).send({ status: "Success", accessToken: accessToken });
     });
   } catch (error) {
     logger.error(error);
-    res.status(400).send({ status: "Failed", message: error });
+    res.status(400).send({ status: "Failed", message: error.message });
   }
 });
 

@@ -1,73 +1,55 @@
 const { dev, logger, db } = require("../../../setup");
 const { authenticate } = require("../../Auth");
+const { checkRequiredParams } = require("../../Utilities");
 
 const baseDB = "projects-card_dev";
 
 // create a project card
-dev.post("/api/projects/card/create", (req, res) => {
-  // async waits for a response
-  (async () => {
-    try {
-      // Check if all required parameters are present
-      const requiredParams = [
-        "title",
-        "languages",
-        "description",
-        "image",
-        "alt",
-        "url",
-      ];
-      for (const param of requiredParams) {
-        if (!req.body[param]) {
-          return res
-            .status(400)
-            .send({ status: "Failed", msg: `Missing parameter: ${param}` });
-        }
-      }
+dev.post("/api/projects/card/create", async (req, res) => {
+  try {
+    checkRequiredParams(
+      ["title", "languages", "description", "image", "alt", "url"],
+      req.body,
+    );
 
-      await db.collection(baseDB).doc().create({
-        title: req.body.title,
-        languages: req.body.languages,
-        description: req.body.description,
-        image: req.body.image,
-        alt: req.body.alt,
-        url: req.body.url,
-      });
+    await db.collection(baseDB).add({
+      title: req.body.title,
+      languages: req.body.languages,
+      description: req.body.description,
+      image: req.body.image,
+      alt: req.body.alt,
+      url: req.body.url,
+    });
 
-      return res.status(200).send({ status: "Success", msg: "Project Saved" });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
-    }
-  })();
+    return res.status(200).send({ status: "Success", msg: "Project Saved" });
+  } catch (error) {
+    logger.error(error);
+    return res.status(400).send({ status: "Failed", msg: error });
+  }
 });
 
 // get a single project card using specific id
-dev.get("/api/projects/card/get/:id", (req, res) => {
-  (async () => {
-    try {
-      const itemRef = db.collection(baseDB).doc(req.params.id);
-      const doc = await itemRef.get(); // gets doc
-      const data = doc.data(); // the actual data of the item
+dev.get("/api/projects/card/get/:id", async (req, res) => {
+  try {
+    checkRequiredParams(["id"], req.params);
+    const id = req.params.id;
+    const itemRef = db.collection(baseDB).doc(id);
+    const doc = await itemRef.get(); // gets doc
+    const data = doc.data(); // the actual data of the item
 
-      if (!data) {
-        logger.error(`Error - No project found with id: ${req.params.id}`);
-        return res.status(404).send({
-          status: "Failed",
-          msg: `No project found with id: ${req.params.id}`,
-        });
-      }
-
-      const card = {
-        id: doc.id,
-        ...data,
-      };
-      return res.status(200).send({ status: "Success", data: card });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
+    if (!data) {
+      throw new Error(`No project found with id: ${id}`);
     }
-  })();
+
+    const card = {
+      id: doc.id,
+      ...data,
+    };
+    return res.status(200).send({ status: "Success", data: card });
+  } catch (error) {
+    logger.error(error);
+    return res.status(400).send({ status: "Failed", msg: error });
+  }
 });
 
 dev.get("/api/projects/card/getAll", authenticate, async (req, res) => {
@@ -76,10 +58,7 @@ dev.get("/api/projects/card/getAll", authenticate, async (req, res) => {
     const snapshot = await cardsRef.get();
 
     if (snapshot.empty) {
-      logger.error("No projects found");
-      return res
-        .status(404)
-        .send({ status: "Failed", msg: "No projects found" });
+      throw new Error("No projects found");
     }
 
     const cards = snapshot.docs.map((doc) => ({
@@ -88,84 +67,60 @@ dev.get("/api/projects/card/getAll", authenticate, async (req, res) => {
     }));
 
     // Send the cards as a response
-    return res
-      .status(200)
-      .send({
-        status: "Success",
-        data: cards,
-      });
+    return res.status(200).send({
+      status: "Success",
+      data: cards,
+    });
   } catch (error) {
     logger.error(error);
-    return res.status(500).send({ status: "Failed", msg: error.message });
+    return res.status(400).send({ status: "Failed", msg: error.message });
   }
 });
 
 // update card
-dev.put("/api/projects/cards/update/:id", (req, res) => {
-  // async waits for a response
-  (async () => {
-    try {
-      // Check if all required parameters are present
-      const requiredParams = [
-        "title",
-        "languages",
-        "description",
-        "image",
-        "alt",
-        "url",
-      ];
-      for (const param of requiredParams) {
-        if (!req.body[param]) {
-          return res
-            .status(400)
-            .send({ status: "Failed", msg: `Missing parameter: ${param}` });
-        }
-      }
+dev.put("/api/projects/cards/update/:id", async (req, res) => {
+  try {
+    checkRequiredParams(
+      ["title", "languages", "description", "image", "alt", "url"],
+      req.body,
+    );
 
-      const reqDoc = db.collection(baseDB).doc(req.params.id);
-      await reqDoc.update({
-        title: req.body.title,
-        languages: req.body.languages,
-        description: req.body.description,
-        image: req.body.image,
-        alt: req.body.alt,
-        url: req.body.url,
-      });
+    const reqDoc = db.collection(baseDB).doc(req.params.id);
+    await reqDoc.update({
+      title: req.body.title,
+      languages: req.body.languages,
+      description: req.body.description,
+      image: req.body.image,
+      alt: req.body.alt,
+      url: req.body.url,
+    });
 
-      return res
-        .status(200)
-        .send({ status: "Success", msg: "Project Updated" });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
-    }
-  })();
+    return res.status(200).send({ status: "Success", msg: "Project Updated" });
+  } catch (error) {
+    logger.error(error);
+    return res.status(400).send({ status: "Failed", msg: error });
+  }
 });
 
 // delete card
-dev.delete("/api/projects/cards/delete/:id", (req, res) => {
-  // async waits for a response
-  (async () => {
-    try {
-      const reqDoc = db.collection(baseDB).doc(req.params.id);
-      const doc = await reqDoc.get();
+dev.delete("/api/projects/cards/delete/:id", async (req, res) => {
+  try {
+    checkRequiredParams(["id"], req.params);
 
-      if (!doc.exists) {
-        return res
-          .status(404)
-          .send({ status: "Failed", msg: "Project not found" });
-      }
+    const reqDoc = db.collection(baseDB).doc(req.params.id);
+    const doc = await reqDoc.get();
 
-      await reqDoc.delete();
-
-      return res
-        .status(200)
-        .send({ status: "Success", msg: "Project Deleted" });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
+    if (!doc.exists) {
+      throw new Error("Project not found");
     }
-  })();
+
+    await reqDoc.delete();
+
+    return res.status(200).send({ status: "Success", msg: "Project Deleted" });
+  } catch (error) {
+    logger.error(error);
+    return res.status(400).send({ status: "Failed", msg: error });
+  }
 });
 
 module.exports = { dev };
