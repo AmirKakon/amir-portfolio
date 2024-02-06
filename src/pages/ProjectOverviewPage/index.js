@@ -32,7 +32,8 @@ const ProjectOverviewPage = ({ isSmallScreen }) => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
-  }, []);
+    console.log("ProjectOverviewPage: ", projectId);
+  }, [projectId]);
 
   return false ? (
     <Loading />

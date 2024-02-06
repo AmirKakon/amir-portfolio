@@ -34,75 +34,66 @@ const authenticate = async (req, res, next) => {
 };
 
 const addRefreshToken = async (refreshToken, userId) => {
-  try {
-    if (!userId) {
-      throw new Error("Invalid user ID");
-    }
-
-    if (!refreshToken) {
-      throw new Error("Invalid refresh token");
-    }
-
-    await db
-      .collection(baseDB)
-      .doc(userId)
-      .set({
-        token: refreshToken,
-        timestamp: admin.firestore.Timestamp.fromDate(dayjs().toDate()),
-      });
-
-    return { status: "Success", msg: "Token Added" };
-  } catch (error) {
-    logger.error(error);
-    return { status: "Failed", msg: error.message };
+  if (!userId) {
+    throw new Error("Invalid user ID");
   }
+
+  if (!refreshToken) {
+    throw new Error("Invalid refresh token");
+  }
+
+  await db
+    .collection(baseDB)
+    .doc(userId)
+    .set({
+      token: refreshToken,
+      timestamp: admin.firestore.Timestamp.fromDate(dayjs().toDate()),
+    });
+
+  return { status: "Success", msg: "Token Added" };
 };
 
 const deleteRefreshToken = async (userId) => {
-  try {
-    if (!userId) {
-      throw new Error("Invalid user ID");
-    }
-
-    const doc = db.collection(baseDB).doc(userId);
-    const docSnapshot = await doc.get();
-
-    if (!docSnapshot.exists) {
-      throw new Error("Refresh token does not exist");
-    }
-
-    await doc.delete();
-
-    return { status: "Success", msg: "Token Deleted" };
-  } catch (error) {
-    logger.error(error);
-    return { status: "Failed", msg: error.message };
+  if (!userId) {
+    throw new Error("Invalid user ID");
   }
+
+  const doc = db.collection(baseDB).doc(userId);
+  const docSnapshot = await doc.get();
+
+  if (!docSnapshot.exists) {
+    throw new Error("Refresh token does not exist");
+  }
+
+  await doc.delete();
+
+  return { status: "Success", msg: "Token Deleted" };
 };
 
 const generateTokens = async (user, refresh) => {
-  try {
-    if (!user) {
-      throw new Error("Invalid user");
-    }
-
-    const accessToken = jwt.sign(user, jwtKey, { expiresIn: jwtKeyExpire });
-    if (!refresh) return accessToken;
-
-    const refreshToken = jwt.sign(user, jwtRefresh, {
-      expiresIn: jwtRefreshExpire,
-    });
-
-    const response = await addRefreshToken(refreshToken, user.id);
-    if (response.status === "Failed") {
-      throw new Error(response.msg);
-    }
-
-    return { accessToken, refreshToken };
-  } catch (error) {
-    logger.error(error);
-    return { accessToken: null, refreshToken: null, error: error.message };
+  if (
+    !user ||
+    !user.id ||
+    !user.name ||
+    user.id !== "1" ||
+    user.name !== "test"
+  ) {
+    throw new Error("Invalid user");
   }
+
+  const accessToken = jwt.sign(user, jwtKey, { expiresIn: jwtKeyExpire });
+  if (!refresh) return accessToken;
+
+  const refreshToken = jwt.sign(user, jwtRefresh, {
+    expiresIn: jwtRefreshExpire,
+  });
+
+  const response = await addRefreshToken(refreshToken, user.id);
+  if (response.status === "Failed") {
+    throw new Error(response.msg);
+  }
+
+  return { accessToken, refreshToken };
 };
 
 dev.post("/api/auth/login", async (req, res) => {
@@ -144,7 +135,7 @@ dev.delete("/api/auth/logout", async (req, res) => {
   }
 });
 
-dev.post("/api/auth/token", async (req, res) => {
+dev.post("/api/auth/refresh", async (req, res) => {
   try {
     checkRequiredParams(["token"], req.body);
 

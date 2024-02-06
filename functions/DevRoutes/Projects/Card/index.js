@@ -5,7 +5,7 @@ const { checkRequiredParams } = require("../../Utilities");
 const baseDB = "projects-card_dev";
 
 // create a project card
-dev.post("/api/projects/card/create", async (req, res) => {
+dev.post("/api/projects/card/create", authenticate, async (req, res) => {
   try {
     checkRequiredParams(
       ["title", "languages", "description", "image", "alt", "url"],
@@ -29,7 +29,7 @@ dev.post("/api/projects/card/create", async (req, res) => {
 });
 
 // get a single project card using specific id
-dev.get("/api/projects/card/get/:id", async (req, res) => {
+dev.get("/api/projects/card/get/:id", authenticate, async (req, res) => {
   try {
     checkRequiredParams(["id"], req.params);
     const id = req.params.id;
@@ -78,7 +78,7 @@ dev.get("/api/projects/card/getAll", authenticate, async (req, res) => {
 });
 
 // update card
-dev.put("/api/projects/cards/update/:id", async (req, res) => {
+dev.put("/api/projects/cards/update/:id", authenticate, async (req, res) => {
   try {
     checkRequiredParams(
       ["title", "languages", "description", "image", "alt", "url"],
@@ -103,7 +103,7 @@ dev.put("/api/projects/cards/update/:id", async (req, res) => {
 });
 
 // delete card
-dev.delete("/api/projects/cards/delete/:id", async (req, res) => {
+dev.delete("/api/projects/cards/delete/:id", authenticate, async (req, res) => {
   try {
     checkRequiredParams(["id"], req.params);
 
