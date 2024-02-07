@@ -17,7 +17,7 @@ import {
   AboutPage,
 } from "./pages";
 import { Header, Footer } from "./layout";
-import { tryGetTokenOrLogin } from "./utilities/auth";
+import { loginUser, tryGetTokenOrLogin } from "./utilities/auth";
 
 const App = () => {
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
@@ -47,10 +47,16 @@ const App = () => {
       };
       tryGetTokenOrLogin(defaultUser)
         .then((res) => {
+          console.log("login success:", res);
           setAccessToken(localStorage.getItem("accessToken"));
         })
         .catch((err) => {
           console.error("login failed:", err);
+          loginUser(defaultUser)
+            .then((res) => { console.log("trail success:", res);})
+            .catch((err) => {
+              console.error("trail failed:", err);
+            });
         });
     }, 60 * 1000); // Update every minute
 

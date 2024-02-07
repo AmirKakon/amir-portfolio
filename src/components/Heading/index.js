@@ -17,7 +17,8 @@ const jumpAnimation = keyframes`
 `;
 
 const Heading = ({ isSmallScreen, handleArrowClick}) => {
-  const isMediumScreen = useMediaQuery("(max-width: 900px)");
+  const isMediumScreen = useMediaQuery("(max-width: 950px)");
+  const isLargeScreen = useMediaQuery("(max-width: 1300px)");
 
   return (
     <>
@@ -26,7 +27,7 @@ const Heading = ({ isSmallScreen, handleArrowClick}) => {
           sx={{
             position: "relative",
             overflow: "hidden",
-            height: isMediumScreen ? "40vh" : "60vh",
+            height: isMediumScreen ? "40vh" : isLargeScreen ? "60vh" : "80vh",
           }}
         >
           <video

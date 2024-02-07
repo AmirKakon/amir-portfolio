@@ -13,3 +13,17 @@ export const getProjectCards = async () => {
   const res = await response.json();
   return res.data;
 };
+
+export const getProjectOverview = async (projectId) => {
+  const response = await fetch(`${apiBaseUrl}/api/projects/overview/get/${projectId}`, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`);
+  }
+  const res = await response.json();
+  return res.data;
+};
