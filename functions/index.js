@@ -7,6 +7,7 @@ require("./Routes/Auth");
 // // dev routes
 require("./DevRoutes/Projects/Card");
 require("./DevRoutes/Projects/Overview");
+require("./DevRoutes/Timeline");
 require("./DevRoutes/Auth");
 
 // Export the main app
