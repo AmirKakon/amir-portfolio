@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import ReactGA from "react-ga4";
-import { lightThemeOptions, darkThemeOptions } from "./theme";
+import { lightThemeOptions } from "./theme";
 import { ThemeProvider, useMediaQuery, createTheme } from "@mui/material";
 import {
   BrowserRouter as Router,
@@ -44,7 +44,7 @@ const App = () => {
 
     const intervalId = setInterval(() => {
       const defaultUser = {
-        username: process.env.REACT_APP_DEFAULT_USER_NAME,
+        username: process.env.REACT_APP_DEFAULT_USERNAME,
         id: id,
       };
       console.log(defaultUser);
