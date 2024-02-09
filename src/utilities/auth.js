@@ -1,4 +1,5 @@
 import { jwtDecode } from "jwt-decode";
+import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
@@ -9,24 +10,24 @@ export const tryGetTokenOrLogin = async (user) => {
 
   if (!accessToken || !refreshToken) {
     // Either token is unavailable, perform login
-    return loginUser(user);
+    return await loginUser(user);
   }
 
   const accessTokenExpiration = getTokenExpiration("accessToken");
   const refreshTokenExpiration = getTokenExpiration("refreshToken");
 
-  if(!accessTokenExpiration || !refreshTokenExpiration) { 
+  if (!accessTokenExpiration || !refreshTokenExpiration) {
     // Either token is invalid, perform login
-    return loginUser(user);
+    return await loginUser(user);
   }
 
   if (
-    (!accessToken || accessTokenExpiration.diff(dayjs(), "minute") < 2) &&
+    accessToken && accessTokenExpiration.diff(dayjs(), "minute") < 2 &&
     refreshToken &&
     refreshTokenExpiration.diff(dayjs(), "day") > 1
   ) {
     // Refresh access token
-    return refreshAccessToken(refreshToken);
+    return await refreshAccessToken(refreshToken);
   }
 
   return { accessToken, refreshToken };
@@ -100,4 +101,13 @@ export const getTokenExpiration = (type) => {
     console.error("Failed to decode token:", error);
     return null;
   }
+};
+
+export const getUuid = () => {
+  let uuid = localStorage.getItem("uuid");
+  if (!uuid) {
+    uuid = uuidv4();
+    localStorage.setItem("uuid", uuid);
+  }
+  return uuid;
 };

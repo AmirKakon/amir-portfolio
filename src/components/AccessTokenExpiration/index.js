@@ -10,9 +10,9 @@ const AccessTokenExpiration = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       const accessTokenExpiration = getTokenExpiration("accessToken");
-      setATExpiration(accessTokenExpiration.diff(dayjs(), "minute"));
+      setATExpiration(accessTokenExpiration ? accessTokenExpiration.diff(dayjs(), "minute") : null);
       const refreshTokenExpiration = getTokenExpiration("refreshToken");
-      setRTExpiration(refreshTokenExpiration.diff(dayjs(), "day"));
+      setRTExpiration(refreshTokenExpiration ? refreshTokenExpiration.diff(dayjs(), "day") : null);
     }, 1000); // Update every second
 
     // Clear interval on component unmount

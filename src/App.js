@@ -17,7 +17,7 @@ import {
   AboutPage,
 } from "./pages";
 import { Header, Footer } from "./layout";
-import { loginUser, tryGetTokenOrLogin } from "./utilities/auth";
+import { loginUser, tryGetTokenOrLogin, getUuid } from "./utilities/auth";
 
 const App = () => {
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
@@ -40,24 +40,26 @@ const App = () => {
     const trackingId = process.env.REACT_APP_GA_TRACKING_ID;
     ReactGA.initialize(`${trackingId}`);
 
+    const id = getUuid();
+
     const intervalId = setInterval(() => {
       const defaultUser = {
         username: process.env.REACT_APP_DEFAULT_USER_NAME,
-        id: process.env.REACT_APP_DEFAULT_USER_ID,
+        id: id,
       };
+      console.log(defaultUser);
       tryGetTokenOrLogin(defaultUser)
         .then((res) => {
-          console.log("login success:", res);
           setAccessToken(localStorage.getItem("accessToken"));
         })
         .catch((err) => {
-          console.error("login failed:", err);
+          console.error("tryGetTokenOrLogin failed:", err);
           loginUser(defaultUser)
             .then((res) => {
-              console.log("trail success:", res);
+              setAccessToken(localStorage.getItem("accessToken"));
             })
             .catch((err) => {
-              console.error("trail failed:", err);
+              console.error("login failed:", err);
             });
         });
     }, 60 * 1000); // Update every minute
@@ -76,38 +78,38 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Router>
         <Header isSmallScreen={isSmallScreen} />
-          <Box display="flex" flexDirection="column" minHeight="100vh">
-            <Routes>
-              <Route
-                path="/about"
-                element={<AboutPage isSmallScreen={isSmallScreen} />}
-              />
-              <Route
-                path="/projects/:projectId"
-                element={<ProjectOverviewPage isSmallScreen={isSmallScreen} />}
-              />
-              <Route
-                path="/projects/"
-                element={<ProjectsPage isSmallScreen={isSmallScreen} />}
-              />
-              <Route
-                path="/"
-                element={<HomePage isSmallScreen={isSmallScreen} />}
-              />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-            <Footer isSmallScreen={isSmallScreen} />
-            <Snackbar
-              anchorOrigin={{ vertical: "top", horizontal: "center" }}
-              open={message !== ""}
-              onClose={() => {
-                setMessage("");
-              }}
-              message={message}
-              key={"jwt-snackbar"}
-              autoHideDuration={6000}
+        <Box display="flex" flexDirection="column" minHeight="100vh">
+          <Routes>
+            <Route
+              path="/about"
+              element={<AboutPage isSmallScreen={isSmallScreen} />}
             />
-          </Box>
+            <Route
+              path="/projects/:projectId"
+              element={<ProjectOverviewPage isSmallScreen={isSmallScreen} />}
+            />
+            <Route
+              path="/projects/"
+              element={<ProjectsPage isSmallScreen={isSmallScreen} />}
+            />
+            <Route
+              path="/"
+              element={<HomePage isSmallScreen={isSmallScreen} />}
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+          <Footer isSmallScreen={isSmallScreen} />
+          <Snackbar
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            open={message !== ""}
+            onClose={() => {
+              setMessage("");
+            }}
+            message={message}
+            key={"jwt-snackbar"}
+            autoHideDuration={6000}
+          />
+        </Box>
       </Router>
     </ThemeProvider>
   );

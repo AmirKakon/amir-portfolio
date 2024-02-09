@@ -75,7 +75,6 @@ const generateTokens = async (user, refresh) => {
     !user ||
     !user.id ||
     !user.name ||
-    user.id !== "1" ||
     user.name !== "test"
   ) {
     throw new Error("Invalid user");
