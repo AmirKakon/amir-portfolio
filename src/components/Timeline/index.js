@@ -50,7 +50,10 @@ const Timeline = ({ isSmallScreen }) => {
           orientation="vertical"
           sx={{ bgcolor: "#a1a1a1", height: "100%", width: "2px" }}
         />
-        <Brightness1Icon fontSize="small" sx={{ color: "#2c3c30", position: "absolute" }} />
+        <Brightness1Icon
+          fontSize="small"
+          sx={{ color: "#2c3c30", position: "absolute" }}
+        />
       </Box>
     );
   };
@@ -76,10 +79,14 @@ const Timeline = ({ isSmallScreen }) => {
         <VerticalLineWithDot />
       </Grid>
 
-      <Grid item xs={5} sx={{marginTop: 2}}>
+      <Grid item xs={5} sx={{ marginTop: 2 }}>
         <Box display="flex" flexDirection="column" alignItems="start">
-          <Typography variant={isSmallScreen ? "h6" : "h5"} fontWeight="bold">{event.title}</Typography>
-          <Typography variant={isSmallScreen ? "body1" : "subtitle1"}>{event.location}</Typography>
+          <Typography variant={isSmallScreen ? "h6" : "h5"} fontWeight="bold">
+            {event.title}
+          </Typography>
+          <Typography variant={isSmallScreen ? "body1" : "subtitle1"}>
+            {event.location}
+          </Typography>
           <Typography variant="body1">{event.date}</Typography>
         </Box>
       </Grid>
@@ -106,14 +113,24 @@ const Timeline = ({ isSmallScreen }) => {
     )
   );
 
-  return loading ? (
-    <CircularProgress />
-  ) : (
-    <Paper sx={{ margin: 1, padding: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Grid container sx={{width: isSmallScreen ? "100wv" : "50vw"}} >
-      {renderCurrent}
-      {renderTimeline}
-    </Grid>
+  return (
+    <Paper
+      sx={{
+        margin: 1,
+        padding: 1,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <Grid container sx={{ width: isSmallScreen ? "100wv" : "50vw" }}>
+          {renderCurrent}
+          {renderTimeline}
+        </Grid>
+      )}
     </Paper>
   );
 };
