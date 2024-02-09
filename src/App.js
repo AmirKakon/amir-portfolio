@@ -17,7 +17,7 @@ import {
   AboutPage,
 } from "./pages";
 import { Header, Footer } from "./layout";
-import { loginUser, tryGetTokenOrLogin, getUuid } from "./utilities/auth";
+import { tryGetTokenOrLogin, getUuid } from "./utilities/auth";
 import Loading from "./components/Loading";
 
 const App = () => {
