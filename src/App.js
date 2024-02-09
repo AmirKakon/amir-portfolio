@@ -18,6 +18,7 @@ import {
 } from "./pages";
 import { Header, Footer } from "./layout";
 import { loginUser, tryGetTokenOrLogin, getUuid } from "./utilities/auth";
+import Loading from "./components/Loading";
 
 const App = () => {
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
@@ -28,6 +29,7 @@ const App = () => {
   );
   const [accessToken, setAccessToken] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setTheme(
@@ -61,6 +63,9 @@ const App = () => {
             .catch((err) => {
               console.error("login failed:", err);
             });
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }, 60 * 1000); // Update every minute
 
@@ -79,25 +84,29 @@ const App = () => {
       <Router>
         <Header isSmallScreen={isSmallScreen} />
         <Box display="flex" flexDirection="column" minHeight="100vh">
-          <Routes>
-            <Route
-              path="/about"
-              element={<AboutPage isSmallScreen={isSmallScreen} />}
-            />
-            <Route
-              path="/projects/:projectId"
-              element={<ProjectOverviewPage isSmallScreen={isSmallScreen} />}
-            />
-            <Route
-              path="/projects/"
-              element={<ProjectsPage isSmallScreen={isSmallScreen} />}
-            />
-            <Route
-              path="/"
-              element={<HomePage isSmallScreen={isSmallScreen} />}
-            />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          {loading ? (
+            <Loading />
+          ) : (
+            <Routes>
+              <Route
+                path="/about"
+                element={<AboutPage isSmallScreen={isSmallScreen} />}
+              />
+              <Route
+                path="/projects/:projectId"
+                element={<ProjectOverviewPage isSmallScreen={isSmallScreen} />}
+              />
+              <Route
+                path="/projects/"
+                element={<ProjectsPage isSmallScreen={isSmallScreen} />}
+              />
+              <Route
+                path="/"
+                element={<HomePage isSmallScreen={isSmallScreen} />}
+              />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          )}
           <Footer isSmallScreen={isSmallScreen} />
           <Snackbar
             anchorOrigin={{ vertical: "top", horizontal: "center" }}
