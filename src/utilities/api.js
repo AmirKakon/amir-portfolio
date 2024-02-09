@@ -27,3 +27,17 @@ export const getProjectOverview = async (projectId) => {
   const res = await response.json();
   return res.data;
 };
+
+export const getTimeline = async () => {
+  const response = await fetch(`${apiBaseUrl}/api/timeline/getAll`, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`);
+  }
+  const res = await response.json();
+  return res.data;
+};

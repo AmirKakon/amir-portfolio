@@ -24,7 +24,7 @@ const AboutPage = ({ isSmallScreen }) => {
   return loading ? (
     <Loading />
   ) : (
-    <Box flex={1} padding={1}>
+    <Box flex={1} sx={{ backgroundColor: "#e2e2e2", padding: 1 }}>
       <Suspense fallback={<Loading />}>
         <AboutMe isSmallScreen={isSmallScreen} />
         <Timeline isSmallScreen={isSmallScreen} data={timelineData} />

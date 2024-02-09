@@ -53,7 +53,9 @@ const App = () => {
         .catch((err) => {
           console.error("login failed:", err);
           loginUser(defaultUser)
-            .then((res) => { console.log("trail success:", res);})
+            .then((res) => {
+              console.log("trail success:", res);
+            })
             .catch((err) => {
               console.error("trail failed:", err);
             });
@@ -74,38 +76,38 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Router>
         <Header isSmallScreen={isSmallScreen} />
-        <Box display="flex" flexDirection="column" minHeight="100vh">
-          <Routes>
-            <Route
-              path="/about"
-              element={<AboutPage isSmallScreen={isSmallScreen} />}
+          <Box display="flex" flexDirection="column" minHeight="100vh">
+            <Routes>
+              <Route
+                path="/about"
+                element={<AboutPage isSmallScreen={isSmallScreen} />}
+              />
+              <Route
+                path="/projects/:projectId"
+                element={<ProjectOverviewPage isSmallScreen={isSmallScreen} />}
+              />
+              <Route
+                path="/projects/"
+                element={<ProjectsPage isSmallScreen={isSmallScreen} />}
+              />
+              <Route
+                path="/"
+                element={<HomePage isSmallScreen={isSmallScreen} />}
+              />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+            <Footer isSmallScreen={isSmallScreen} />
+            <Snackbar
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              open={message !== ""}
+              onClose={() => {
+                setMessage("");
+              }}
+              message={message}
+              key={"jwt-snackbar"}
+              autoHideDuration={6000}
             />
-            <Route
-              path="/projects/:projectId"
-              element={<ProjectOverviewPage isSmallScreen={isSmallScreen} />}
-            />
-            <Route
-              path="/projects/"
-              element={<ProjectsPage isSmallScreen={isSmallScreen} />}
-            />
-            <Route
-              path="/"
-              element={<HomePage isSmallScreen={isSmallScreen} />}
-            />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-          <Footer isSmallScreen={isSmallScreen} />
-          <Snackbar
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
-            open={message !== ""}
-            onClose={() => {
-              setMessage("");
-            }}
-            message={message}
-            key={"jwt-snackbar"}
-            autoHideDuration={6000}
-          />
-        </Box>
+          </Box>
       </Router>
     </ThemeProvider>
   );

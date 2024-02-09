@@ -15,6 +15,11 @@ export const tryGetTokenOrLogin = async (user) => {
   const accessTokenExpiration = getTokenExpiration("accessToken");
   const refreshTokenExpiration = getTokenExpiration("refreshToken");
 
+  if(!accessTokenExpiration || !refreshTokenExpiration) { 
+    // Either token is invalid, perform login
+    return loginUser(user);
+  }
+
   if (
     (!accessToken || accessTokenExpiration.diff(dayjs(), "minute") < 2) &&
     refreshToken &&

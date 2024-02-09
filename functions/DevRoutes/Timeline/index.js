@@ -7,12 +7,13 @@ const baseDB = "timeline_dev";
 // create a timeline event
 dev.post("/api/timeline/create", authenticate, async (req, res) => {
   try {
-    checkRequiredParams(["id", "title", "location", "date"], req.body);
+    checkRequiredParams(["id", "title", "location", "date", "image"], req.body);
 
     await db.collection(baseDB).doc(req.body.id).set({
       title: req.body.title,
       location: req.body.location,
       date: req.body.date,
+      image: req.body.image,
     });
 
     return res
@@ -79,13 +80,14 @@ dev.get("/api/timeline/getAll", authenticate, async (req, res) => {
 dev.put("/api/timeline/update/:id", authenticate, async (req, res) => {
   try {
     checkRequiredParams(["id"], req.params);
-    checkRequiredParams(["title", "location", "date"], req.body);
+    checkRequiredParams(["title", "location", "date", "image"], req.body);
 
     const reqDoc = db.collection(baseDB).doc(req.params.id);
     await reqDoc.update({
       title: req.body.title,
       location: req.body.location,
       date: req.body.date,
+      image: req.body.image,
     });
 
     return res
