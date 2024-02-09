@@ -29,7 +29,7 @@ const App = () => {
   );
   const [accessToken, setAccessToken] = useState("");
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setTheme(
@@ -43,26 +43,26 @@ const App = () => {
     ReactGA.initialize(`${trackingId}`);
 
     const id = getUuid();
+    const defaultUser = {
+      username: process.env.REACT_APP_DEFAULT_USERNAME,
+      id: id,
+    };
+    tryGetTokenOrLogin(defaultUser)
+      .then((res) => {
+        setAccessToken(localStorage.getItem("accessToken"));
+      })
+      .finally(() => {
+        setLoading(false);
+      });
 
     const intervalId = setInterval(() => {
       const defaultUser = {
         username: process.env.REACT_APP_DEFAULT_USERNAME,
         id: id,
       };
-      console.log(defaultUser);
       tryGetTokenOrLogin(defaultUser)
         .then((res) => {
           setAccessToken(localStorage.getItem("accessToken"));
-        })
-        .catch((err) => {
-          console.error("tryGetTokenOrLogin failed:", err);
-          loginUser(defaultUser)
-            .then((res) => {
-              setAccessToken(localStorage.getItem("accessToken"));
-            })
-            .catch((err) => {
-              console.error("login failed:", err);
-            });
         })
         .finally(() => {
           setLoading(false);

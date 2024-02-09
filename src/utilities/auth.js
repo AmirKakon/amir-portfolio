@@ -5,32 +5,38 @@ import dayjs from "dayjs";
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 export const tryGetTokenOrLogin = async (user) => {
-  const accessToken = localStorage.getItem("accessToken");
-  const refreshToken = localStorage.getItem("refreshToken");
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
 
-  if (!accessToken || !refreshToken) {
-    // Either token is unavailable, perform login
+    if (!accessToken || !refreshToken) {
+      // Either token is unavailable, perform login
+      return await loginUser(user);
+    }
+
+    const accessTokenExpiration = getTokenExpiration("accessToken");
+    const refreshTokenExpiration = getTokenExpiration("refreshToken");
+
+    if (!accessTokenExpiration || !refreshTokenExpiration) {
+      // Either token is invalid, perform login
+      return await loginUser(user);
+    }
+
+    if (
+      accessToken &&
+      accessTokenExpiration.diff(dayjs(), "minute") < 2 &&
+      refreshToken &&
+      refreshTokenExpiration.diff(dayjs(), "day") > 1
+    ) {
+      // Refresh access token
+      return await refreshAccessToken(refreshToken);
+    }
+
+    return { accessToken, refreshToken };
+  } catch (error) {
+    console.error("tryGetTokenOrLogin failed:", error);
     return await loginUser(user);
   }
-
-  const accessTokenExpiration = getTokenExpiration("accessToken");
-  const refreshTokenExpiration = getTokenExpiration("refreshToken");
-
-  if (!accessTokenExpiration || !refreshTokenExpiration) {
-    // Either token is invalid, perform login
-    return await loginUser(user);
-  }
-
-  if (
-    accessToken && accessTokenExpiration.diff(dayjs(), "minute") < 2 &&
-    refreshToken &&
-    refreshTokenExpiration.diff(dayjs(), "day") > 1
-  ) {
-    // Refresh access token
-    return await refreshAccessToken(refreshToken);
-  }
-
-  return { accessToken, refreshToken };
 };
 
 export const loginUser = async ({ username, id }) => {
