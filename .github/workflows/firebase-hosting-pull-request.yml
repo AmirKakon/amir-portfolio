@@ -19,6 +19,9 @@ jobs:
       - name: Set up google analytics tracking id
         run: echo "REACT_APP_GA_TRACKING_ID=${{ secrets.GA_TRACKING_ID }}" >> $GITHUB_ENV
 
+      - name: Set up default username
+        run: echo "REACT_APP_DEFAULT_USERNAME=${{ secrets.DEFAULT_USERNAME }}" >> $GITHUB_ENV
+
       - run: npm ci && npm run build
       
       - uses: FirebaseExtended/action-hosting-deploy@v0

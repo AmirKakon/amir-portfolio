@@ -10,33 +10,47 @@ import {
   List,
   ListItem,
   ListItemText,
+  Button,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
-import InfoIcon from '@mui/icons-material/Info';
+import ConstructionIcon from "@mui/icons-material/Construction";
+import InfoIcon from "@mui/icons-material/Info";
 import logo from "../../assets/amir-icon.png";
 import tongueLogo from "../../assets/amir-tongue-icon.png";
 
 const HeaderLogo = ({ isSmallScreen }) => {
+  const [isHovered, setHovered] = useState(false);
+
   return (
     <>
       {!isSmallScreen && (
         <Link
-          to="/home"
+          to="/"
           style={{
             textDecoration: "none",
             display: "flex",
             color: "inherit",
             marginLeft: -10,
           }}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
         >
-          <img src={logo} alt="Amir's Portfolio" height={55}/>
+          <img
+            src={isHovered ? tongueLogo : logo}
+            alt="Amir's Portfolio"
+            height={55}
+          />
         </Link>
       )}
 
       <Typography
         variant="h5"
-        sx={{ flexGrow: 1, textAlign: isSmallScreen ? "center" : "left", ml:1 }}
+        sx={{
+          flexGrow: 1,
+          textAlign: isSmallScreen ? "center" : "left",
+          ml: isSmallScreen ? -5 : 1,
+        }}
       >
         Amir's Portfolio
       </Typography>
@@ -76,8 +90,22 @@ const Header = ({ isSmallScreen }) => {
     setDrawerOpen(false);
   };
 
-  const headerIcons = [{ title: "Home", link: "/home", icon: <HomeIcon /> },
-  { title: "About", link: "/about", icon: <InfoIcon /> }];
+  const headerIcons = [
+    { title: "Home", link: "/", icon: <HomeIcon /> },
+    { title: "Projects", link: "/projects", icon: <ConstructionIcon /> },
+    { title: "About", link: "/about", icon: <InfoIcon /> },
+  ];
+
+  const viewResume = (
+    <a
+      href="https://firebasestorage.googleapis.com/v0/b/amir-portfolio-9fe8a.appspot.com/o/resume%2FAmir%20Kakon%202023.pdf?alt=media&token=af9724e1-a212-4bb4-9728-30620a3733a1"
+      style={{ textDecoration: "none" }}
+    >
+      <Button color={isSmallScreen ? "primary" : "secondary"}>
+        <Typography variant="button">View Resume</Typography>
+      </Button>
+    </a>
+  );
 
   return (
     <Box sx={{ flexGrow: 1, marginBottom: 7 }}>
@@ -111,6 +139,7 @@ const Header = ({ isSmallScreen }) => {
                   icon={item.icon}
                 />
               ))}
+              {viewResume}
             </>
           )}
         </Toolbar>
@@ -128,6 +157,7 @@ const Header = ({ isSmallScreen }) => {
                 handleDrawerClose={handleDrawerClose}
               />
             ))}
+            <ListItem> {viewResume} </ListItem>
           </List>
         </Drawer>
       )}

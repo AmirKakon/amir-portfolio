@@ -1,20 +1,31 @@
-import React, {useEffect, useState} from "react";
-import Loading from "../../components/Loading";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
+import Heading from "../../components/Heading";
+import Projects from "../../components/Projects";
+import AccessTokenExpiration from "../../components/AccessTokenExpiration";
+import Loading from "../../components/Loading";
 
-const HomePage = () => {
+
+const HomePage = ({ isSmallScreen }) => {
   const [loading, setLoading] = useState(true);
-  // window.scrollTo({ top: 0, behavior: "auto" });
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
     setLoading(false);
   }, []);
 
+  const jumpToProjects = () => {
+    const projects = document.getElementById("projects");
+    projects.scrollIntoView({ behavior: "smooth" });
+  };
 
-  return (
-    loading ? <Loading /> :
-    <Box flex={1} padding={1}>
-      <h1>Home Page</h1>
+  return loading ? (
+    <Loading />
+  ) : (
+    <Box flex={1} spacing={1} sx={{backgroundColor: "#e2e2e2"}}>
+      <Heading isSmallScreen={isSmallScreen} handleArrowClick={jumpToProjects}/>
+      <Projects isSmallScreen={isSmallScreen} />
+      <AccessTokenExpiration />
     </Box>
   );
 };
