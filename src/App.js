@@ -109,7 +109,7 @@ const App = () => {
           )}
           <Footer isSmallScreen={isSmallScreen} />
           <Snackbar
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            anchorOrigin={{ vertical: isSmallScreen ? "bottom" : "top", horizontal: "center" }}
             open={message !== ""}
             onClose={() => {
               setMessage("");
