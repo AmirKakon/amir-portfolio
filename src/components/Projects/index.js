@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { getProjectCards } from "../../utilities/api";
 import { Paper, Typography, Grid, CircularProgress } from "@mui/material";
 import ProjectItem from "./ProjectItem";
-import developer from "../../assets/developer.gif";
+const developer =
+  "https://firebasestorage.googleapis.com/v0/b/amir-portfolio-9fe8a.appspot.com/o/assets%2Fdeveloper.gif?alt=media&token=ff34df41-9454-4348-a934-32da86e8ac28";
 
 const Projects = () => {
   const [cards, setCards] = useState([]);
