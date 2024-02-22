@@ -24,7 +24,7 @@ const HomePage = ({ isSmallScreen }) => {
   ) : (
     <Box flex={1} spacing={1} sx={{backgroundColor: "#e2e2e2"}}>
       <Heading isSmallScreen={isSmallScreen} handleArrowClick={jumpToProjects}/>
-      <Projects isSmallScreen={isSmallScreen} />
+      <Projects isSmallScreen={isSmallScreen} filter={true} />
       <AccessTokenExpiration />
     </Box>
   );

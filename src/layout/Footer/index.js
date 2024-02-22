@@ -1,25 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Link } from "@mui/material";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import EmailIcon from "@mui/icons-material/Email";
 import GitHubIcon from "@mui/icons-material/GitHub";
 
 const FooterContactInformation = ({ isSmallScreen }) => {
   const items = [
     {
-      href: "https://wa.me/972547321928",
-      text: "+972-54-732-1928",
-      icon: <WhatsAppIcon color="action" style={{ marginRight: isSmallScreen ? "1px" : "5px" }} />,
-    },
-    {
       href: "mailto:amir.kakon@gmail.com",
       text: "amir.kakon@gmail.com",
-      icon: <EmailIcon color="action" style={{ marginRight: isSmallScreen ? "1px" : "5px" }} />,
+      icon: (
+        <EmailIcon
+          color="action"
+          style={{ marginRight: isSmallScreen ? "1px" : "5px" }}
+        />
+      ),
     },
+    {
+      href: "https://www.linkedin.com/in/amir-kakon",
+      text: "Amir-Kakon",
+      icon: (
+        <LinkedInIcon
+          color="action"
+          style={{ marginRight: isSmallScreen ? "1px" : "5px" }}
+        />
+      ),
+    },
+
     {
       href: "https://github.com/AmirKakon",
       text: "AmirKakon",
-      icon: <GitHubIcon color="action" style={{ marginRight: isSmallScreen ? "1px" : "5px" }} />,
+      icon: (
+        <GitHubIcon
+          color="action"
+          style={{ marginRight: isSmallScreen ? "1px" : "5px" }}
+        />
+      ),
     },
   ];
 
@@ -27,15 +43,15 @@ const FooterContactInformation = ({ isSmallScreen }) => {
     <Grid item>
       <Box display="flex" alignItems="center">
         {items.map((item, index) => (
-          <Box key={index} display="flex" alignItems="center" marginRight={2} >
+          <Box key={index} display="flex" alignItems="center" marginRight={2}>
             <Link
-                href={item.href}
-                color="textPrimary"
-                style={{ textDecoration: "none" }}
-                target="_blank"
-              >
-                {item.icon}
-              </Link>
+              href={item.href}
+              color="textPrimary"
+              style={{ textDecoration: "none" }}
+              target="_blank"
+            >
+              {item.icon}
+            </Link>
             <Typography>
               <Link
                 href={item.href}

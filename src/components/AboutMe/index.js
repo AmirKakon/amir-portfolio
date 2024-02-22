@@ -1,6 +1,7 @@
 import React from "react";
 import { Paper, Typography, Grid } from "@mui/material";
-import info from "../../assets/amir-icon-info.mp4";
+const info =
+  "https://firebasestorage.googleapis.com/v0/b/amir-portfolio-9fe8a.appspot.com/o/assets%2Famir-icon-info.mp4?alt=media&token=f21ba6fb-da90-4224-bb44-4b78106fa603";
 
 const AboutMe = ({ isSmallScreen }) => {
   return (
