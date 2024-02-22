@@ -54,7 +54,14 @@ const ProjectOverviewPage = ({ isSmallScreen }) => {
           )}
 
           <Grid item sm={7}>
-            <Typography variant="body1">{project.description}</Typography>
+            <Typography variant="body1" gutterBottom>
+              {project.description.split("\\n").map((line, index) => (
+                <React.Fragment key={index}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
+            </Typography>
 
             <Typography
               variant="body1"
@@ -87,14 +94,18 @@ const ProjectOverviewPage = ({ isSmallScreen }) => {
                 </ListItem>
               ))}
             </List>
-            {project.reference && <Typography
-            textAlign="center"
-              variant="body1"
-              fontWeight="bold"
-              backgroundColor="#d4d4d4"
-            >
-              <Link href={project.reference} underline="hover">Click here to check it out!</Link>
-            </Typography>}
+            {project.reference && (
+              <Typography
+                textAlign="center"
+                variant="body1"
+                fontWeight="bold"
+                backgroundColor="#d4d4d4"
+              >
+                <Link href={project.reference} underline="hover">
+                  Click here to check it out!
+                </Link>
+              </Typography>
+            )}
           </Grid>
           {!isSmallScreen && (
             <Grid item sm={5}>
