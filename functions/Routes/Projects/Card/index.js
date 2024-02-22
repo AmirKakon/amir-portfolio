@@ -1,62 +1,64 @@
 const { app, logger, db } = require("../../../setup");
+const { authenticate } = require("../../Auth");
+const { checkRequiredParams } = require("../../Utilities");
 
 const baseDB = "projects-card";
 
 // create a project card
-app.post("/api/projects/card/create", (req, res) => {
-  // async waits for a response
-  (async () => {
-    try {
-      await db.collection(baseDB).doc().create({
-        title: req.body.title,
-        description: req.body.description,
-        image: req.body.image,
-        alt: req.body.alt,
-        url: req.body.url,
-      });
+app.post("/api/projects/card/create", authenticate, async (req, res) => {
+  try {
+    checkRequiredParams(
+      ["title", "technologies", "description", "image", "alt", "url"],
+      req.body,
+    );
 
-      return res.status(200).send({ status: "Success", msg: "Project Saved" });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
-    }
-  })();
+    await db.collection(baseDB).add({
+      title: req.body.title,
+      technologies: req.body.technologies,
+      description: req.body.description,
+      image: req.body.image,
+      alt: req.body.alt,
+      url: req.body.url,
+    });
+
+    return res.status(200).send({ status: "Success", msg: "Project Saved" });
+  } catch (error) {
+    logger.error(error);
+    return res.status(400).send({ status: "Failed", msg: error });
+  }
 });
 
 // get a single project card using specific id
-app.get("/api/projects/card/get/:id", (req, res) => {
-  (async () => {
-    try {
-      const itemRef = db.collection(baseDB).doc(req.params.id);
-      const doc = await itemRef.get(); // gets doc
-      const card = doc.data(); // the actual data of the item
+app.get("/api/projects/card/get/:id", authenticate, async (req, res) => {
+  try {
+    checkRequiredParams(["id"], req.params);
+    const id = req.params.id;
+    const itemRef = db.collection(baseDB).doc(id);
+    const doc = await itemRef.get(); // gets doc
+    const data = doc.data(); // the actual data of the item
 
-      if (!card) {
-        logger.error(`Error - No project found with id: ${req.params.id}`);
-        return res.status(404).send({
-          status: "Failed",
-          msg: `No project found with id: ${req.params.id}`,
-        });
-      }
-
-      return res.status(200).send({ status: "Success", data: card });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
+    if (!data) {
+      throw new Error(`No project found with id: ${id}`);
     }
-  })();
+
+    const card = {
+      id: doc.id,
+      ...data,
+    };
+    return res.status(200).send({ status: "Success", data: card });
+  } catch (error) {
+    logger.error(error);
+    return res.status(400).send({ status: "Failed", msg: error });
+  }
 });
 
-app.get("/api/projects/card/getAll", async (req, res) => {
+app.get("/api/projects/card/getAll", authenticate, async (req, res) => {
   try {
     const cardsRef = db.collection(baseDB);
     const snapshot = await cardsRef.get();
 
     if (snapshot.empty) {
-      logger.error("No projects found");
-      return res
-        .status(404)
-        .send({ status: "Failed", msg: "No projects found" });
+      throw new Error("No projects found");
     }
 
     const cards = snapshot.docs.map((doc) => ({
@@ -65,53 +67,61 @@ app.get("/api/projects/card/getAll", async (req, res) => {
     }));
 
     // Send the cards as a response
-    return res.status(200).send({ status: "Success", data: cards });
+    return res.status(200).send({
+      status: "Success",
+      data: cards,
+    });
   } catch (error) {
     logger.error(error);
-    return res.status(500).send({ status: "Failed", msg: error.message });
+    return res.status(400).send({ status: "Failed", msg: error.message });
   }
 });
 
 // update card
-app.put("/api/projects/cards/update/:id", (req, res) => {
-  // async waits for a response
-  (async () => {
-    try {
-      const reqDoc = db.collection(baseDB).doc(req.params.id);
-      await reqDoc.update({
-        title: req.body.title,
-        description: req.body.description,
-        image: req.body.image,
-        alt: req.body.alt,
-        url: req.body.url,
-      });
+app.put("/api/projects/card/update/:id", authenticate, async (req, res) => {
+  try {
+    checkRequiredParams(["id"], req.params);
+    checkRequiredParams(
+      ["title", "technologies", "description", "image", "alt", "url"],
+      req.body,
+    );
 
-      return res
-        .status(200)
-        .send({ status: "Success", msg: "Project Updated" });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
-    }
-  })();
+    const reqDoc = db.collection(baseDB).doc(req.params.id);
+    await reqDoc.update({
+      title: req.body.title,
+      technologies: req.body.technologies,
+      description: req.body.description,
+      image: req.body.image,
+      alt: req.body.alt,
+      url: req.body.url,
+    });
+
+    return res.status(200).send({ status: "Success", msg: "Project Updated" });
+  } catch (error) {
+    logger.error(error);
+    return res.status(400).send({ status: "Failed", msg: error });
+  }
 });
 
 // delete card
-app.delete("/api/projects/cards/delete/:id", (req, res) => {
-  // async waits for a response
-  (async () => {
-    try {
-      const reqDoc = db.collection(baseDB).doc(req.params.id);
-      await reqDoc.delete();
+app.delete("/api/projects/card/delete/:id", authenticate, async (req, res) => {
+  try {
+    checkRequiredParams(["id"], req.params);
 
-      return res
-        .status(200)
-        .send({ status: "Success", msg: "Project Deleted" });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
+    const reqDoc = db.collection(baseDB).doc(req.params.id);
+    const doc = await reqDoc.get();
+
+    if (!doc.exists) {
+      throw new Error("Project not found");
     }
-  })();
+
+    await reqDoc.delete();
+
+    return res.status(200).send({ status: "Success", msg: "Project Deleted" });
+  } catch (error) {
+    logger.error(error);
+    return res.status(400).send({ status: "Failed", msg: error });
+  }
 });
 
 module.exports = { app };
