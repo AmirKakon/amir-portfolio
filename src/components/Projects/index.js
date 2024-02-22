@@ -21,7 +21,7 @@ const Projects = ({filter}) => {
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
-  }, []);
+  }, [filter]);
 
   return (
     <div id="projects">
