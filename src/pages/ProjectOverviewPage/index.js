@@ -4,6 +4,7 @@ import { getProjectOverview } from "../../utilities/api";
 import {
   Box,
   Grid,
+  Link,
   List,
   ListItem,
   ListItemText,
@@ -86,6 +87,14 @@ const ProjectOverviewPage = ({ isSmallScreen }) => {
                 </ListItem>
               ))}
             </List>
+            {project.reference && <Typography
+            textAlign="center"
+              variant="body1"
+              fontWeight="bold"
+              backgroundColor="#d4d4d4"
+            >
+              <Link href={project.reference} underline="hover">Click here to check it out!</Link>
+            </Typography>}
           </Grid>
           {!isSmallScreen && (
             <Grid item sm={5}>

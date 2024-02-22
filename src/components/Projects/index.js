@@ -5,13 +5,20 @@ import ProjectItem from "./ProjectItem";
 const developer =
   "https://firebasestorage.googleapis.com/v0/b/amir-portfolio-9fe8a.appspot.com/o/assets%2Fdeveloper.gif?alt=media&token=ff34df41-9454-4348-a934-32da86e8ac28";
 
-const Projects = () => {
+  const projectList = ["bayit-abroad", "device-management-dashboard", "master-slave-simulator"]
+
+const Projects = ({filter}) => {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getProjectCards()
-      .then((data) => setCards(data))
+      .then((data) => {
+        if(filter){
+          data = data.filter((project) => projectList.includes(project.url))
+        }
+        setCards(data)
+      })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   }, []);

@@ -12,7 +12,7 @@ const ProjectsPage = ({ isSmallScreen }) => {
     <Loading />
   ) : (
     <Box flex={1} spacing={1} sx={{ backgroundColor: "#e2e2e2", paddingTop: 1 }}>
-      <Projects />
+      <Projects isSmallScreen={isSmallScreen} filter={false}/>
     </Box>
   );
 };

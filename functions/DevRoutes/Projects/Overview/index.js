@@ -8,7 +8,14 @@ const baseDB = "projects-overview_dev";
 dev.post("/api/projects/overview/create", authenticate, async (req, res) => {
   try {
     checkRequiredParams(
-      ["title", "technologies", "description", "image", "features", "url"],
+      [
+        "title",
+        "technologies",
+        "description",
+        "image",
+        "features",
+        "url",
+      ],
       req.body,
     );
 
@@ -18,6 +25,7 @@ dev.post("/api/projects/overview/create", authenticate, async (req, res) => {
       description: req.body.description,
       image: req.body.image,
       features: req.body.features,
+      reference: req.body.reference,
     });
 
     return res.status(200).send({ status: "Success", msg: "Project Saved" });
@@ -81,7 +89,13 @@ dev.put("/api/projects/overview/update/:id", authenticate, async (req, res) => {
   try {
     checkRequiredParams(["id"], req.params);
     checkRequiredParams(
-      ["title", "technologies", "description", "image", "features"],
+      [
+        "title",
+        "technologies",
+        "description",
+        "image",
+        "features",
+      ],
       req.body,
     );
 
@@ -92,6 +106,7 @@ dev.put("/api/projects/overview/update/:id", authenticate, async (req, res) => {
       description: req.body.description,
       image: req.body.image,
       features: req.body.features,
+      reference: req.body.reference,
     });
 
     return res.status(200).send({ status: "Success", msg: "Project Updated" });
@@ -125,7 +140,6 @@ dev.delete(
       logger.error(error);
       return res.status(400).send({ status: "Failed", msg: error });
     }
-  },
-);
+  });
 
 module.exports = { dev };
