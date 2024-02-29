@@ -5,8 +5,9 @@ require("./Routes/Projects/Card");
 require("./Routes/Projects/Overview");
 require("./Routes/Timeline");
 require("./Routes/Auth");
+require("./Routes/CopyFromDev");
 
-// // dev routes
+// dev routes
 require("./DevRoutes/Projects/Card");
 require("./DevRoutes/Projects/Overview");
 require("./DevRoutes/Timeline");
