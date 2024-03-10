@@ -2,31 +2,29 @@ const { dev, logger, db } = require("../../setup");
 const { authenticate } = require("../Auth");
 const { checkRequiredParams } = require("../Utilities");
 
-const baseDB = "timeline_dev";
+const baseDB = "certificates_dev";
 
-// create a timeline event
-dev.post("/api/timeline/create", authenticate, async (req, res) => {
+// create a certificate
+dev.post("/api/certificates/create", authenticate, async (req, res) => {
   try {
-    checkRequiredParams(["id", "title", "location", "date", "image"], req.body);
+    checkRequiredParams(["id", "image", "alt"], req.body);
 
     await db.collection(baseDB).doc(req.body.id).set({
-      title: req.body.title,
-      location: req.body.location,
-      date: req.body.date,
       image: req.body.image,
+      alt: req.body.alt,
     });
 
     return res
       .status(200)
-      .send({ status: "Success", msg: "Timeline Event Saved" });
+      .send({ status: "Success", msg: "Certificate Saved" });
   } catch (error) {
     logger.error(error);
     return res.status(400).send({ status: "Failed", msg: error });
   }
 });
 
-// get a single timeline event using specific id
-dev.get("/api/timeline/get/:id", authenticate, async (req, res) => {
+// get a single certificate using specific id
+dev.get("/api/certificates/get/:id", authenticate, async (req, res) => {
   try {
     checkRequiredParams(["id"], req.params);
     const id = req.params.id;
@@ -35,40 +33,40 @@ dev.get("/api/timeline/get/:id", authenticate, async (req, res) => {
     const data = doc.data(); // the actual data of the item
 
     if (!data) {
-      throw new Error(`No timeline event found with id: ${id}`);
+      throw new Error(`No certificate found with id: ${id}`);
     }
 
-    const event = {
+    const certificate = {
       id: doc.id,
       ...data,
     };
-    return res.status(200).send({ status: "Success", data: event });
+    return res.status(200).send({ status: "Success", data: certificate });
   } catch (error) {
     logger.error(error);
     return res.status(400).send({ status: "Failed", msg: error });
   }
 });
 
-dev.get("/api/timeline/getAll", authenticate, async (req, res) => {
+dev.get("/api/certificates/getAll", authenticate, async (req, res) => {
   try {
     const itemsRef = db.collection(baseDB);
     const snapshot = await itemsRef.get();
 
     if (snapshot.empty) {
-      throw new Error("No timeline events found");
+      throw new Error("No certificates found");
     }
 
-    const events = snapshot.docs
+    const certificates = snapshot.docs
       .map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }))
       .sort((a, b) => a.id.localeCompare(b.id));
 
-    // Send the events as a response
+    // Send the certificates as a response
     return res.status(200).send({
       status: "Success",
-      data: events,
+      data: certificates,
     });
   } catch (error) {
     logger.error(error);
@@ -76,31 +74,29 @@ dev.get("/api/timeline/getAll", authenticate, async (req, res) => {
   }
 });
 
-// update timeline event
-dev.put("/api/timeline/update/:id", authenticate, async (req, res) => {
+// update certificates
+dev.put("/api/certificates/update/:id", authenticate, async (req, res) => {
   try {
     checkRequiredParams(["id"], req.params);
-    checkRequiredParams(["title", "location", "date", "image"], req.body);
+    checkRequiredParams(["image", "alt"], req.body);
 
     const reqDoc = db.collection(baseDB).doc(req.params.id);
     await reqDoc.update({
-      title: req.body.title,
-      location: req.body.location,
-      date: req.body.date,
       image: req.body.image,
+      alt: req.body.alt,
     });
 
     return res
       .status(200)
-      .send({ status: "Success", msg: "Timeline Event Updated" });
+      .send({ status: "Success", msg: "Certificate Updated" });
   } catch (error) {
     logger.error(error);
     return res.status(400).send({ status: "Failed", msg: error });
   }
 });
 
-// delete timeline event
-dev.delete("/api/timeline/delete/:id", authenticate, async (req, res) => {
+// delete certificate
+dev.delete("/api/certificates/delete/:id", authenticate, async (req, res) => {
   try {
     checkRequiredParams(["id"], req.params);
 
@@ -108,14 +104,14 @@ dev.delete("/api/timeline/delete/:id", authenticate, async (req, res) => {
     const doc = await reqDoc.get();
 
     if (!doc.exists) {
-      throw new Error("Timeline event not found");
+      throw new Error("Certificate not found");
     }
 
     await reqDoc.delete();
 
     return res
       .status(200)
-      .send({ status: "Success", msg: "Timeline Event Deleted" });
+      .send({ status: "Success", msg: "Certificate Deleted" });
   } catch (error) {
     logger.error(error);
     return res.status(400).send({ status: "Failed", msg: error });

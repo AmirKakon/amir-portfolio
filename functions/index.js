@@ -4,12 +4,17 @@ const { app, dev, functions } = require("./setup");
 require("./Routes/Projects/Card");
 require("./Routes/Projects/Overview");
 require("./Routes/Timeline");
+require("./Routes/Certificates");
 require("./Routes/Auth");
+
+require("./Routes/CopyFromDev");
+
 
 // // dev routes
 require("./DevRoutes/Projects/Card");
 require("./DevRoutes/Projects/Overview");
 require("./DevRoutes/Timeline");
+require("./DevRoutes/Certificates");
 require("./DevRoutes/Auth");
 
 // Export the main app

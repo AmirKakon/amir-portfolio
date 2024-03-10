@@ -41,3 +41,17 @@ export const getTimeline = async () => {
   const res = await response.json();
   return res.data;
 };
+
+export const getCertificates = async () => {
+  const response = await fetch(`${apiBaseUrl}/api/certificates/getAll`, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`);
+  }
+  const res = await response.json();
+  return res.data;
+};
