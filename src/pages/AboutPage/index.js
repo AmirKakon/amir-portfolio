@@ -1,24 +1,30 @@
 import React, { useEffect, useState, Suspense, lazy } from "react";
+import { getTimeline, getCertificates } from "../../utilities/api";
 import Loading from "../../components/Loading";
 import { Box } from "@mui/material";
-import { dummyData } from "../../components/Timeline/dummyData";
 const Timeline = lazy(() => import("../../components/Timeline"));
 const AboutMe = lazy(() => import("../../components/AboutMe"));
+const ImageSlider = lazy(() => import("../../components/ImageSlider"));
 
 const AboutPage = ({ isSmallScreen }) => {
   const [timelineData, setTimelineData] = useState([]);
+  const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      // const response = await fetch("https://api.spacexdata.com/v4/launches");
-      // const data = await response.json();
-      setTimelineData(dummyData);
-      setLoading(false);
-    };
-
-    fetchData();
     window.scrollTo({ top: 0, behavior: "auto" });
+  }, []);
+
+  useEffect(() => {
+    getTimeline()
+      .then((data) => {
+        setTimelineData(data);
+      })
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+    getCertificates()
+      .then((data) => setCertificates(data))
+      .catch((error) => console.error(error));
   }, []);
 
   return loading ? (
@@ -28,7 +34,7 @@ const AboutPage = ({ isSmallScreen }) => {
       <Suspense fallback={<Loading />}>
         <AboutMe isSmallScreen={isSmallScreen} />
         <Timeline isSmallScreen={isSmallScreen} data={timelineData} />
-        
+        <ImageSlider isSmallScreen={isSmallScreen} images={certificates} />
       </Suspense>
     </Box>
   );
