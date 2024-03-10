@@ -6,11 +6,12 @@ require("./Routes/Projects/Overview");
 require("./Routes/Timeline");
 require("./Routes/Certificates");
 require("./Routes/Auth");
+require("./Routes/CopyFromDev");
 
 require("./Routes/CopyFromDev");
 
 
-// // dev routes
+// dev routes
 require("./DevRoutes/Projects/Card");
 require("./DevRoutes/Projects/Overview");
 require("./DevRoutes/Timeline");
