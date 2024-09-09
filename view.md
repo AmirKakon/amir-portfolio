@@ -46,7 +46,7 @@ Describes all available messages known to the server.
 **Request**
 
 | Field          | Start Bytes | Length | Description                                |
-| -------------- | ----------- | ------ | ----------------------------------      -- |
+| -------------- | ----------- | ------ | ------------------------------------------ |
 | Message Number | 0           | 2      | Must be the value 50. type h               |
 | Message Length | 2           | 4      | Total message length. type i               |
 | User Name      | 6           | 32     | Your first + last name (first_last).type s |
